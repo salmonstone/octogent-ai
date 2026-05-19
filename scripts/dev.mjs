@@ -77,7 +77,7 @@ const apiOrigin = `http://127.0.0.1:${apiPort}`;
 
 console.log(`[octogent-dev] using api port ${apiPort}`);
 
-const monorepoRoot = new URL("..", import.meta.url).pathname.replace(/\/$/, "");
+const monorepoRoot = new URL("..", import.meta.url).pathname.replace(/\/$/, "").replace(/^\/([A-Za-z]:)/, "$1");
 
 // Resolve project state dir from global registry.
 const resolveProjectStateDir = (workspaceCwd) => {
@@ -126,6 +126,7 @@ const child = spawn(
   ["-r", "--parallel", "--filter", "@octogent/api", "--filter", "@octogent/web", "dev"],
   {
     stdio: "inherit",
+    shell: process.platform === "win32",
     env: {
       ...process.env,
       OCTOGENT_API_PORT: String(apiPort),
